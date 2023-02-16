@@ -6,9 +6,7 @@
 
 // Done!
 function getLength(jumpings: number[]): number {
-  return jumpings.reduce(
-    (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump
-  );
+  return jumpings.reduce((jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump);
 }
 
 /*
@@ -68,27 +66,20 @@ function averageWeeklyTemperature(temperatures: Temp[]) {
   Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
   */
 
-function showProduct(
-  name: string,
-  price: number,
-  image: string,
-  parent: HTMLElement,
-  amount?: number,
-  description?: string
-) {
-    let container = document.createElement("div");
-    let title = document.createElement("h4");
-    let pris = document.createElement("strong");
-    let imageTag = document.createElement("img");
+function showProduct(productName: string, productPrice: number, imageSrc: string, productContainer: HTMLElement) {
 
-    title.innerHTML = name;
-    pris.innerHTML = price.toString();
-    imageTag.src = image;
+  productContainer.innerHTML = `
+    <div>
+      <h4>
+        ${productName}
+      </h4>
+      <strong>
+        ${productPrice}
+      </strong>
+      <img src="${imageSrc}">
+    </div>
+    `;
 
-    container.appendChild(title);
-    container.appendChild(imageTag);
-    container.appendChild(pris);
-    parent.appendChild(container);
   }
 
 /*
@@ -96,27 +87,34 @@ function showProduct(
   går att göra betydligt bättre. Gör om så många som du kan hitta!
   */
 
+// Done!
 function presentStudents(students: Student[]) {
-  //gör dom:en innnan looparna - klart
-  //vad mer ???
   for (const student of students) {
     let container = document.createElement("div");
     let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
     if (student.handedInOnTime) {      
-      checkbox.checked = true;
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#passedstudents");
-      listOfStudents?.appendChild(container);
+      presentPassedStudents(checkbox, container);
 
     } else {
-      checkbox.checked = false;
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#failedstudents");
-      listOfStudents?.appendChild(container);
+      presentFailedStudents(checkbox, container);
     }
   }
+}
+
+function presentFailedStudents(checkbox: HTMLInputElement, container: HTMLDivElement) {
+  checkbox.checked = false;
+  container.appendChild(checkbox);
+  let listOfStudents = document.querySelector("ul#failedstudents");
+  listOfStudents?.appendChild(container);
+}
+
+function presentPassedStudents(checkbox: HTMLInputElement, container: HTMLDivElement) {
+  checkbox.checked = true;
+  container.appendChild(checkbox);
+  let listOfStudents = document.querySelector("ul#passedstudents");
+  listOfStudents?.appendChild(container);
 }
 
 /*
@@ -139,7 +137,7 @@ function concatenateStrings() {
     lösning som är hållbar och skalar bättre. 
 */
 
-//Done!
+// Done!
 class User {
   constructor(
     public name: string,
