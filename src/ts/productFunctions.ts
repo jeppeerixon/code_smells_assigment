@@ -54,26 +54,26 @@ export function SelctedProdCategory(dogproduct: HTMLDivElement, i: number) {
   }
   
 export function makeDogProdInfo(dogImgContainer: HTMLDivElement, dogproduct: HTMLDivElement, i: number) {
-let cartSymbolContainer: HTMLDivElement = document.createElement("div");
-cartSymbolContainer.className = "cartSymbolContainer";
-dogImgContainer.appendChild(cartSymbolContainer);
+    let cartSymbolContainer: HTMLDivElement = document.createElement("div");
+    cartSymbolContainer.className = "cartSymbolContainer";
+    dogImgContainer.appendChild(cartSymbolContainer);
 
-let cartSymbol: HTMLElement = document.createElement("i");
-cartSymbol.className = "bi bi-bag-plus";
-cartSymbolContainer.appendChild(cartSymbol);
+    let cartSymbol: HTMLElement = document.createElement("i");
+    cartSymbol.className = "bi bi-bag-plus";
+    cartSymbolContainer.appendChild(cartSymbol);
 
-let name: HTMLHeadingElement = document.createElement("h5");
-name.innerHTML = productList[i].name;
-dogproduct.appendChild(name);
+    let name: HTMLHeadingElement = document.createElement("h5");
+    name.innerHTML = productList[i].name;
+    dogproduct.appendChild(name);
 
-let price: HTMLHeadingElement = document.createElement("p");
-price.innerHTML = "$" + productList[i].price;
-dogproduct.appendChild(price);
+    let price: HTMLHeadingElement = document.createElement("p");
+    price.innerHTML = "$" + productList[i].price;
+    dogproduct.appendChild(price);
 
-let info: HTMLHeadingElement = document.createElement("p");
-info.innerHTML = productList[i].info;
-dogproduct.appendChild(info);
+    let info: HTMLHeadingElement = document.createElement("p");
+    info.innerHTML = productList[i].info;
+    dogproduct.appendChild(info);
 
-productList[i].productSpec = false;
-return { cartSymbolContainer, cartSymbol };
+    productList[i].productSpec = false;
+    return { cartSymbolContainer, cartSymbol };
 }
