@@ -1,3 +1,5 @@
+import { makeDogProdHTML, makeDogProdInfo, dogHtmlEventlisteners, SelctedProdCategory } from "./productFunctions";
+
 /*
 1. Se om du kan hitta problem med koden nedan och se om du kan göra den bättre.
 */
@@ -8,6 +10,7 @@ export enum Sort {
   NAME_ALPHABETIC_REVERSE = "Omvänd alfabetisk ordning",
 }
 
+// DONE!
 export class Product {
   constructor(
     public id: number,
@@ -15,157 +18,67 @@ export class Product {
     public imageUrl: string[],
     public price: number,
     public description: string
-  ) {
-    this.id = id;
-    this.name = name;
-    this.imageUrl = imageUrl;
-    this.price = price;
-    this.description = description;
-  }
+  ) {}
 }
 
 export function sortProductsBy(sort: Sort, products: Product[]): Product[] {
-  let copiedList: Product[] = [];
-  products.forEach((product) => copiedList.push(product));
 
-  let sortedList: Product[] = [];
-  if (sort === Sort.PRICE_ASCENDING) {
-    sortedList = sortList("Price", copiedList);
-    sortedList.reverse();
-  } else if (sort === Sort.PRICE_DECENDING) {
-    sortedList = sortList("Price", copiedList);
-  } else if (sort === Sort.NAME_ALPHABETIC) {
-    sortedList = sortList("Name", copiedList);
-  } else if (sort === Sort.NAME_ALPHABETIC_REVERSE) {
-    sortedList = sortList("Name", copiedList);
-    sortedList.reverse();
+  const copiedList: Product[] = [...products];
+
+  switch (sort) {
+    case Sort.PRICE_ASCENDING:
+      return products.sort((a, b) => a.price - b.price);
+    case Sort.PRICE_DECENDING:
+      return products.sort((a, b) => b.price - a.price);
+    case Sort.NAME_ALPHABETIC:
+      return products.sort((a, b) => a.name.localeCompare(b.name));
+    case Sort.NAME_ALPHABETIC_REVERSE:
+      return products.sort((a, b) => b.name.localeCompare(a.name));
+    default:
+      return copiedList;
   }
-
-  return sortedList;
-}
-
-function sortList(whichAttribute: string, products: Product[]): Product[] {
-  return products.sort((p1, p2) => {
-    if (whichAttribute === "Price") {
-      if (p1.price < p2.price) {
-        return 1;
-      } else if (p1.price > p2.price) {
-        return -1;
-      }
-      return 0;
-    } else {
-      if (p1.name < p2.name) {
-        return 1;
-      } else if (p1.name > p2.name) {
-        return -1;
-      }
-      return 0;
-    }
-  });
 }
 
 /*
   2. Refaktorera funktionen createProductHtml :)
   */
+
+// Done!  
 class Cart {
   addToCart(i: number) {}
 }
+
 export let cartList = JSON.parse(localStorage.getItem("savedCartList") || "[]");
 export let productList = JSON.parse(localStorage.getItem("savedList") || "[]");
 
 export function createProductHtml() {
+
   let quantity = 0;
   for (let i = 0; i < cartList.length; i++) {
     quantity += cartList[i].quantity;
   }
+
   let floatingCart = document.getElementById(
     "floatingcartnumber"
   ) as HTMLElement;
   floatingCart.innerHTML = "" + quantity;
 
   for (let i = 0; i < productList.length; i++) {
-    let dogproduct: HTMLDivElement = document.createElement("div");
-    let dogImgContainer: HTMLDivElement = document.createElement("div");
-    dogImgContainer.className = "dogimgcontainer";
-    dogproduct.appendChild(dogImgContainer);
-    let dogImg: HTMLImageElement = document.createElement("img");
+    
+    let dogHtml = makeDogProdHTML(i);
 
-    dogImg.src = productList[i].picture;
-    dogImg.alt = productList[i].pictureAlt;
+    let dogProdInfo = makeDogProdInfo(dogHtml.dogImg, dogHtml.dogproduct, i);
 
-    dogImg.addEventListener("mouseover", () => {
-      cartSymbolContainer.classList.add("hover");
-      dogImg.classList.add("hover");
-    });
+    dogHtmlEventlisteners(dogHtml, dogProdInfo.cartSymbolContainer, i);
 
-    dogImg.addEventListener("mouseout", () => {
-      dogImg.classList.remove("hover");
-      cartSymbolContainer.classList.remove("hover");
-    });
-
-    dogImgContainer.appendChild(dogImg);
-    let cartSymbolContainer: HTMLDivElement = document.createElement("div");
-    cartSymbolContainer.className = "cartSymbolContainer";
-    dogImgContainer.appendChild(cartSymbolContainer);
-
-    let cartSymbol: HTMLElement = document.createElement("i");
-    cartSymbol.className = "bi bi-bag-plus";
-    cartSymbolContainer.appendChild(cartSymbol);
-
-    let name: HTMLHeadingElement = document.createElement("h5");
-    name.innerHTML = productList[i].name;
-    dogproduct.appendChild(name);
-
-    let price: HTMLHeadingElement = document.createElement("p");
-    price.innerHTML = "$" + productList[i].price;
-    dogproduct.appendChild(price);
-
-    let info: HTMLHeadingElement = document.createElement("p");
-    info.innerHTML = productList[i].info;
-    dogproduct.appendChild(info);
-
-    productList[i].productSpec = false;
-
-    dogImg.addEventListener("click", () => {
-      productList[i].productSpec = !productList[i].productSpec;
-      window.location.href = "product-spec.html#backArrow";
-      let listastext = JSON.stringify(productList);
-      localStorage.setItem("savedList", listastext);
-    });
-
-    cartSymbol.addEventListener("click", () => {
+    dogProdInfo.cartSymbol.addEventListener("click", () => {
       let cart = new Cart();
       cart.addToCart(i);
     });
 
-    if (productList[i].category === "sassy") {
-      let cat1: HTMLElement = document.getElementById("sassy") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat1.appendChild(dogproduct);
-    }
-    if (productList[i].category === "kriminella") {
-      let cat2: HTMLElement = document.getElementById(
-        "kriminella"
-      ) as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat2.appendChild(dogproduct);
-    }
-    if (productList[i].category == "singlar") {
-      let cat3: HTMLElement = document.getElementById("singlar") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat3.appendChild(dogproduct);
-    }
-    if (productList[i].category === "puppy") {
-      let cat4: HTMLElement = document.getElementById("puppy") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat4.appendChild(dogproduct);
-    }
-    if (productList[i].category === "oldies") {
-      let cat5: HTMLElement = document.getElementById("oldies") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat5.appendChild(dogproduct);
-    }
+    SelctedProdCategory(dogHtml.dogproduct, i);
   }
+  
   let listastext = JSON.stringify(productList);
   localStorage.setItem("savedList", listastext);
   sessionStorage.clear();
@@ -183,11 +96,14 @@ export class CartProduct {
   ) {}
 }
 
+
 function getfromstorage() {
   let container = document.getElementById("checkout-table");
 
   let fromstorage: string = localStorage.getItem("cartArray") || "";
   let astext: CartProduct[] = JSON.parse(fromstorage);
+
+  // gör om till stor `` string
 
   let productcontainer = document.getElementById(
     "product-ckeckout-container"
@@ -219,6 +135,8 @@ function getfromstorage() {
   checkkouttotal2.appendChild(totaltext);
   totaltext.innerHTML = "total:";
 
+
+    // samma här eller funktioner
   for (let i: number = 0; i < astext.length; i++) {
     let productt: HTMLTableCellElement = document.createElement("th");
     titlecontainer.appendChild(productt);
